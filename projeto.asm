@@ -374,10 +374,29 @@ Criptoanalise:
     sub ecx, 2
     mov byte ptr [szNomeArquivoCriptografado + ecx], 0
 
-    ; Implemente o código para realizar a criptoanálise do arquivo criptografado
-    ; ... (coloque seu código aqui)
-    
-    ; Após a criptoanálise, o programa pode retornar ao menu principal
+    ; Verifica se o nome do arquivo de entrada existe
+    invoke CreateFile, offset szNomeArquivoCriptografado, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL
+
+    cmp eax, INVALID_HANDLE_VALUE
+    je ArquivoNaoEncontradoCriptoanalise
+
+    ; Exibe a mensagem de arquivo de entrada encontrado
+    invoke WriteConsole, hStdOut, offset szArquivoEncontrado, sizeof szArquivoEncontrado - 1, NULL, NULL
+
+    ; Criptoanálise
+    ; Aqui você pode implementar a lógica para realizar a criptoanálise no arquivo de entrada
+
+    ; Fecha o arquivo de entrada
+    invoke CloseHandle, eax
+
+    ; Volta ao menu principal
+    jmp start
+
+ArquivoNaoEncontradoCriptoanalise:
+    ; Exibe a mensagem de arquivo não encontrado
+    invoke WriteConsole, hStdOut, offset szArquivoNaoEncontrado, sizeof szArquivoNaoEncontrado - 1, NULL, NULL
+
+    ; Volta ao menu principal
     jmp start
 
 ;------------------------------------------------------------------------------------------------------------------------------------
